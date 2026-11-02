@@ -10,16 +10,16 @@ import time
 import threading
 
 st.set_page_config(layout="wide")
-st.markdown("""
-        <style>
-               .block-container {
-                    padding-top: 1rem;
-                    padding-bottom: 0rem;
-                    padding-left: 5rem;
-                    padding-right: 5rem;
-                }
-        </style>
-        """, unsafe_allow_html=True)
+# st.markdown("""
+#         <style>
+#                .block-container {
+#                     padding-top: 1rem;
+#                     padding-bottom: 0rem;
+#                     padding-left: 5rem;
+#                     padding-right: 5rem;
+#                 }
+#         </style>
+#         """, unsafe_allow_html=True)
 # st.rerun(additional_reruns = {"specific_rerun": "headers", "time": "180s"})
 
 if "f" not in st.session_state:
