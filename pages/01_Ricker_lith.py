@@ -5,22 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import hilbert
 import math
-import plotly.graph_objects as go
-import time
-import threading
+# import plotly.graph_objects as go
+# import time
 
 st.set_page_config(layout="wide")
-# st.markdown("""
-#         <style>
-#                .block-container {
-#                     padding-top: 1rem;
-#                     padding-bottom: 0rem;
-#                     padding-left: 5rem;
-#                     padding-right: 5rem;
-#                 }
-#         </style>
-#         """, unsafe_allow_html=True)
-# st.rerun(additional_reruns = {"specific_rerun": "headers", "time": "180s"})
+
 
 if "f" not in st.session_state:
     st.session_state["f"] = 25.
@@ -49,7 +38,6 @@ if 'w_arr' not in st.session_state:
     # st.session_state.w_arr = [300.] * (nLayers + 1)   # each layer thickness
     st.session_state.w_arr =[100.0, 300.0, 100.0, 400.0, 300.0, 300.0, 300.0]
 
-
 if 'd_arr' not in st.session_state: 
     st.session_state.d_arr = [0.] * (nLayers + 1)   # depth of i-th layer bottom
 
@@ -69,7 +57,6 @@ if 'lith_ind_arr' not in st.session_state:
     st.session_state.lith_ind_arr = [0, 1, 2, 3, 4, 5, 6]   # array with litholory indices for each layer
 
 
-
 # width_arr = [0.] * nLayers      # thickness of each layer
 options1 = ["Limestone", "Sandstone", "Shale", "Dolomite", "Salt", "Basement"]
 
@@ -85,7 +72,7 @@ basement = {'name': 'Basement', 'rho':2.8, 'v':6.8, 'color':'#ef138a', "hatch": 
 all_lith = [shale, limestone, sandstone, shale, dolomite, salt, basement]
 st.session_state.lith_arr = [shale, limestone, sandstone, shale, dolomite, sandstone, basement]  # initial model
 
-st.title("Ricker wavelet: Wedge model 2")
+# st.title("Ricker wavelet: Wedge model 2")
 
 def ricker(f, length=0.512, dt=0.001):
     t = np.linspace(-length/2, (length-dt)/2, int(length/dt))
@@ -103,7 +90,6 @@ with col100:
     nLayersMax = nLayers
 
     lith_indx = st.session_state.lith_ind_arr[layer]
-    # lith1 = st.selectbox("Select lithology", options1, index=layer-1, label_visibility="visible")
     lith1 = st.selectbox("Select lithology", options1, index=lith_indx-1, label_visibility="visible")
 
 
@@ -146,9 +132,9 @@ with col100:
             st.session_state.d_arr[i] = st.session_state.d_arr[i-1] + st.session_state.w_arr[i-1]
             st.session_state.t_arr[i] = st.session_state.t_arr[i-1] + 2.* st.session_state.w_arr[i] / v1
 
-    print('*** w_arr:', st.session_state.w_arr)    
-    print('*** d_arr:', st.session_state.d_arr)
-    print('*** t_arr:', st.session_state.t_arr)
+    # print('*** w_arr:', st.session_state.w_arr)    
+    # print('*** d_arr:', st.session_state.d_arr)
+    # print('*** t_arr:', st.session_state.t_arr)
 
 dr = 0.1        #refl. interval
 wedge_shift = 3 #wedge_shift ms per trace
@@ -162,8 +148,6 @@ with col200:
     plt.subplot(111)
     for i in range(nLayersMax):
         # to calculate reflectivity 2d array here ****************** refl_arr[nTraces][nSamples] ???
-
-
 
         try:
             lith_indx = st.session_state.lith_ind_arr[i+1]
@@ -257,7 +241,7 @@ fig0 = plt.figure(figsize=(4,2.3))
 
 with col300:    #plot wavelet
 
-    str1 = "Wavelet Ricker " + str(int(f + 0.5)) + " Hz, φ = " + str(int(phi+0.5)) + "°"
+    str1 = "Ricker " + str(int(f + 0.5)) + " Hz, φ = " + str(int(phi+0.5)) + "°"
     st.subheader(f"**{str1}**")
 
     if envelope:
@@ -450,11 +434,6 @@ for i in range(nLayersMax):
 
 
 plt.legend(fontsize=5, loc='upper right', bbox_to_anchor=(0.95, 0.95))
-
-
-
-
-
 plt.gca().invert_yaxis()
 
 with col2:
