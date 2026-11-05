@@ -23,12 +23,13 @@ st.subheader("Lithology parameters")
 st.table(df)
 
 st.write('You can select wavelet and vary model parameters and see on the fly how your seismic section would change.')
+st.write('Select layer number and after that select lihology and thickness for this layer.')
 st.write('It convolves selected wavelet with reflectivity series and calculates a synthetic traces for a wedge model.')
 
 st.write('A list of wavelets that can be used to calculate a synthetic trace:')
 st.write('**Ricker, Ormsby, Klauder**. Use a left side menu to select a wavelet and sliders to change parameters.')
-st.write('Wavelet equations are from a paper by Harold Ryan: Ricker, Ormsby; Klauder, Butterworth - A Choice of wavelets, publised in CSEG Recorder, September 1994.')
-st.write('This is another classical work which provides math foundation for the wedge model:  \nWidess, M. B., 1973, How thin is a thin bed?: Geophysics, 38, 1176-1180.')
+# st.write('Wavelet equations are from a paper by Harold Ryan: Ricker, Ormsby; Klauder, Butterworth - A Choice of wavelets, publised in CSEG Recorder, September 1994.')
+# st.write('This is another classical work which provides math foundation for the wedge model:  \nWidess, M. B., 1973, How thin is a thin bed?: Geophysics, 38, 1176-1180.')
 
 url1 = "https://www.rmseismic.com/lasviewer.html"
 
@@ -45,3 +46,6 @@ google_js = """
   gtag('config', 'G-VBX865DFKL');
 </script>
 """
+
+#html1 = f"{google_js}"
+ 
