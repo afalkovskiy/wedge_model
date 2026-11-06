@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-st.title('Wavelets with Wedge Model')
+st.title('Wavelets with Wedge Model v.2')
 st.subheader('Alex Falkovskiy')
 url = "https://www.rmseismic.com"
 
