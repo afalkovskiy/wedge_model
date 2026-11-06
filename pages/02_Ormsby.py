@@ -205,17 +205,10 @@ with col200:
 with col202:
     str1 = "Wavelet parameters"
     st.subheader(f"**{str1}**")
-    # st.latex(r'''
-    # A(t) = (1-2\pi^2 f^2 t^2)e^{-\pi^2 f^2 t^2}
-    # ''') 
     st.latex(r'''
     A(t)=\frac{\pi f_4^2 sinc^2 (\pi f_4 t) - \pi f_3^2 sinc^2 (\pi f_3 t)}{f_4 - f_3} \\
     - \frac{\pi f_2^2 sinc^2 (\pi f_2 t) - \pi f_1^2 sinc^2 (\pi f_1 t)}{f_2 - f_1}
     ''') 
-
-    
-    # st.slider('Wavelet phase rotation (deg)', key="phi", min_value=0., max_value=360., step=45., format="%.1f")  
-    # st.slider('Dominant requency [1, 240] Hz', key="f", min_value=1., max_value=240., step=1., format="%.1f")
 
     st.slider('Wavelet phase rotation (deg)', key="phi", min_value=0., max_value=360., step=45., format="%.1f") 
     # f = st.slider('Frequency from [1, 240] Hz', value=25., min_value=1., max_value=240., step=1., format="%.1f") 

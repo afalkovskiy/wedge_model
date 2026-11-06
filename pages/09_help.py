@@ -15,7 +15,7 @@ st.title('Wavelets with Wedge Model v.2')
 url = "https://www.rmseismic.com"
 
 st.write('This web app helps to visualise how a wedge model would look like on a seismic section.')
-st.write('It uses a list of several lithology options with preselected typical velocity and densith values to make creation of a model simple.')
+st.write('It uses a list of several lithology options with preselected typical velocity and density values to make creation of a model simple.')
 st.write('Select lithology from this list and layer thickness from the Model parameters menu to to build a model.')
 
 # Display a static table

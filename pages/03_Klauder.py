@@ -217,20 +217,12 @@ with col200:
 with col202:
     str1 = "Wavelet parameters"
     st.subheader(f"**{str1}**")
-    # st.latex(r'''
-    # A(t) = (1-2\pi^2 f^2 t^2)e^{-\pi^2 f^2 t^2}
-    # ''') 
-    # st.latex(r'''
-    # A(t)=\frac{\pi f_4^2 sinc^2 (\pi f_4 t) - \pi f_3^2 sinc^2 (\pi f_3 t)}{f_4 - f_3} \\
-    # - \frac{\pi f_2^2 sinc^2 (\pi f_2 t) - \pi f_1^2 sinc^2 (\pi f_1 t)}{f_2 - f_1}
-    # ''') 
 
     st.latex(r'''
     A(t) = Re (\frac{sin(\pi kt(T-t))}{\pi kt} e^ {2 \pi if_0 t}), \\
-    where \; k = \frac{f_2 - f_l}{T}, fo = \frac{f_2 + f_l}{2}, i = \sqrt{-1}
+     \; k = \frac{f_2 - f_l}{T}, fo = \frac{f_2 + f_l}{2}, i = \sqrt{-1}
     ''')
     
-
     st.slider('Wavelet phase rotation (deg)', key="phi", min_value=0., max_value=360., step=45., format="%.1f") 
 
     # if "f" not in st.session_state:

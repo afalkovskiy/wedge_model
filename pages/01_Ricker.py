@@ -397,9 +397,10 @@ plt.ylabel("Two-way time (ms)")
 
 # plot traces
 for i in range(nTraces):
-    plt.plot(trace_arr[i] + i, 1000*x1, color='tab:blue', alpha=.45)
+    # plt.plot(trace_arr[i] + i, 1000*x1, color='tab:blue', alpha=.45)
+    plt.plot(trace_arr[i] + i, 1000*x1, color='tab:blue', linewidth=0.75)
     y2pos = np.maximum(0,trace_arr[i])
-    plt.fill_betweenx(1000*x1, y2pos + i, i,  color='tab:blue', alpha=.45)
+    plt.fill_betweenx(1000*x1, y2pos + i, i,  color='tab:blue', alpha=.85)
 
 
 # plot lithology
@@ -417,10 +418,13 @@ for i in range(nLayersMax):
 
     if i==0:
         # plt.fill_between(layer_x, 0*layers_arr[i], layers_arr[i], hatch=h1, alpha=0.08)
-        plt.fill_between(layer_x, 0*layers_arr[i], layers_arr[i], color=c1, alpha=0.08, label=l1)  
+        # plt.fill_between(layer_x, 0*layers_arr[i], layers_arr[i], color=c1, alpha=0.08, label=l1)  
+        plt.fill_between(layer_x, 0*layers_arr[i], layers_arr[i], facecolor=c1, edgecolor='grey', hatch=h1, alpha=0.15, label=l1)
     else:           
         # plt.fill_between(layer_x, layers_arr[i-1], layers_arr[i], hatch=h1, alpha=0.08)
-        plt.fill_between(layer_x, layers_arr[i-1], layers_arr[i], color=c1, alpha=0.08, label=l1)
+        # plt.fill_between(layer_x, layers_arr[i-1], layers_arr[i], color=c1, alpha=0.08, label=l1)
+        plt.fill_between(layer_x, layers_arr[i-1], layers_arr[i], facecolor=c1, edgecolor='grey', hatch=h1, alpha=0.15, label=l1)
+
 
 
 plt.legend(fontsize=5, loc='upper right', bbox_to_anchor=(0.95, 0.95))
