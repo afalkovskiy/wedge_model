@@ -50,8 +50,8 @@ if 't_arr' not in st.session_state:
 if 'ri_arr' not in st.session_state: 
     st.session_state.ri_arr = [-0.11, -0.22, 0.38, -0.30, 0.32, 0.]  # ri_arr[i] = reflextivity between i-th and (i+1)-th layers
 
-print('w_arr:', st.session_state.w_arr)    
-print('d_arr:', st.session_state.d_arr)
+# print('w_arr:', st.session_state.w_arr)    
+# print('d_arr:', st.session_state.d_arr)
 
 if 'lith_arr' not in st.session_state:
     st.session_state.lith_arr = [None] * (nLayers + 1)    # array with litholory objects for each layer
@@ -109,7 +109,7 @@ with col100:
     st.session_state.lith_arr[layer] = all_lith[indx_lith1]
     st.session_state.lith_ind_arr[layer] = indx_lith1 + 1
 
-    print('lith_ind_arr', st.session_state.lith_ind_arr)
+    # print('lith_ind_arr', st.session_state.lith_ind_arr)
 
     # thickness = st.slider('Layer thickness (m)', min_value=10., max_value=400., value=300., step=5., format="%.1f") 
     w1 = st.session_state.w_arr[layer-1]
@@ -307,7 +307,7 @@ for j in range(nTraces):
     ns = int(dr/dt1)
     # st.write('dr =', dr, ' dt = ', dt1, ' ns = ', ns)
     # y1[ns] = -1.
-    print("############## next layer ###############")
+    # print("############## next layer ###############")
     rf_wedge = 0
     for i in range(nLayers+1):
         # if j==0:
@@ -350,8 +350,8 @@ for j in range(nTraces):
                 name1 = all_lith[lith_indx1]['name'] 
                 name2 = all_lith[lith_indx2]['name'] 
                 rf=(rho2*v2 - rho1*v1)/(rho2*v2 + rho1*v1)
-            print("trace j = ", j, "\tlayer i = ", i, "\nname1:", name1, "\tv1 = ", v1, 
-                "\nname2:", name2, "\tv2 = ", v2, "\trf = ", rf)
+            # print("trace j = ", j, "\tlayer i = ", i, "\nname1:", name1, "\tv1 = ", v1, 
+            #     "\nname2:", name2, "\tv2 = ", v2, "\trf = ", rf)
 
             # rf = -1.
         except:
@@ -396,7 +396,7 @@ for j in range(nTraces):
 
         if j==0:
             st.session_state.ri_arr[i] = rf
-            print('i =', i, 'rf =', rf)
+            # print('i =', i, 'rf =', rf)
         
 
 
