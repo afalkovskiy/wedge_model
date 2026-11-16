@@ -34,6 +34,9 @@ layer_x = np.arange(nTraces)    # x coordinates for plotting layers, the same fo
 layer_y = np.zeros(nTraces)     # y coordinates of layar for plotting (2way time)
 layer_y_d = np.zeros(nTraces)   # y coordinates of layar for plotting (depth (m))
 
+if 'wNum' not in st.session_state: # wedge layer number
+    st.session_state.wNum = 10
+
 if 'w_arr' not in st.session_state: 
     # st.session_state.w_arr = [300.] * (nLayers + 1)   # each layer thickness
     st.session_state.w_arr =[100.0, 300.0, 100.0, 400.0, 300.0, 300.0, 300.0]
@@ -69,8 +72,10 @@ dolomite = {'name': 'Dolomite', 'rho':2.75, 'v':6.7, 'color':'#8080ff', "hatch":
 salt = {'name': 'Salt', 'rho':2.2, 'v':4.5, 'color':'#7ddfbe', "hatch": "++"}
 basement = {'name': 'Basement', 'rho':2.8, 'v':6.8, 'color':'#ef138a', "hatch": "-|"}
 
-all_lith = [shale, limestone, sandstone, shale, dolomite, salt, basement]
-st.session_state.lith_arr = [shale, limestone, sandstone, shale, dolomite, sandstone, basement]  # initial model
+all_lith0 = [limestone, sandstone, shale, dolomite, salt, basement]             # all available dictionaries
+all_lith = [shale, limestone, sandstone, shale, dolomite, salt, basement]       # initial model
+# st.session_state.lith_arr = [shale, limestone, sandstone, shale, dolomite, sandstone, basement]  # initial model
+st.session_state.lith_arr = [shale, sandstone, sandstone, shale, dolomite, sandstone, basement]  # initial model
 
 # st.title("Ricker wavelet: Wedge model 2")
 
@@ -80,7 +85,11 @@ def ricker(f, length=0.512, dt=0.001):
     return t, y
 
 # col100, col200, col300 = st.columns(3)
-col100, col200, col202, col300 = st.columns([3, 6, 3, 5])
+col100, col200, col202, col300 = st.columns([4, 6, 3, 4])
+
+# ==========================================
+# MODEL SETUP
+# ==========================================
 
 with col100:
     st.subheader('Model parameters')
@@ -94,8 +103,8 @@ with col100:
 
 
     indx_lith1 = options1.index(lith1)
-    v1 = all_lith[indx_lith1]['v']
-    rho1 = all_lith[indx_lith1]['rho']
+    v1 = all_lith0[indx_lith1]['v']
+    rho1 = all_lith0[indx_lith1]['rho']
 
     st.session_state.lith_arr[layer] = all_lith[indx_lith1]
     st.session_state.lith_ind_arr[layer] = indx_lith1 + 1
@@ -109,7 +118,7 @@ with col100:
     st.session_state.w_arr[layer-1] = thickness
     st.markdown(f"Layer {layer}: {lith1} {thickness} m, v={v1} km/s, {rho1} g/cc")
     # formatted_items = [f"{val:.2f}" for val in st.session_state.ri_arr]
-    formatted = "Reflectivity Ri: "
+    formatted = "RCi: "
     # for val in st.session_state.ri_arr:
     #     formatted = formatted + f" {val:.2f}"
 
@@ -139,9 +148,18 @@ with col100:
 dr = 0.1        #refl. interval
 wedge_shift = 3 #wedge_shift ms per trace
 
+# ==========================================
+# MODEL 
+# ==========================================
 
 with col200:
     st.subheader('Model')
+
+    wedgeFlag = st.checkbox('Wedge',value=True)
+    if wedgeFlag: 
+        st.session_state.wNum = 3
+    else:
+        st.session_state.wNum = 10   
 
     # wedge model in depth
     fig0 = plt.figure(figsize=(4,2.3))
@@ -158,31 +176,25 @@ with col200:
             h1 = ' '
             l1 = ''      
 
-        if i < 3:
+        if i < st.session_state.wNum:
             layer_y_d1 = np.ones(nTraces)*st.session_state.d_arr[i]
             layer_y_d2 = np.ones(nTraces)*st.session_state.d_arr[i+1]
 
-        if i==3:
+        if i==st.session_state.wNum:
             incr = st.session_state.w_arr[i]/(nTraces - 1.)
             for j in range(nTraces): 
                 layer_y_d1 = np.ones(nTraces)*st.session_state.d_arr[i]             
                 layer_y_d2[j] = layer_y_d1[j] + incr*j
 
-        if i>3:
+        if i>st.session_state.wNum:
             layer_y_d1 = layer_y_d2.copy()
             for j in range(nTraces):
                 layer_y_d2[j] = layer_y_d1[j] + st.session_state.w_arr[i]
-
-
-        # plt.fill_between(layer_x, st.session_state.d_arr[i], st.session_state.d_arr[i+1], color=c1, alpha=0.15, label=l1)
-        #   
+ 
         plt.fill_between(layer_x, layer_y_d1, layer_y_d2, hatch=h1, alpha=0.15)
         plt.fill_between(layer_x, layer_y_d1, layer_y_d2, color=c1, alpha=0.15, label=l1)
    
 
-
-
-    # plt.legend()
     plt.legend(fontsize=5, loc='upper right', bbox_to_anchor=(0.95, 0.95))
 
 
@@ -202,6 +214,8 @@ with col202:
     st.slider('Dominant requency [1, 240] Hz', key="f", min_value=1., max_value=240., step=1., format="%.1f")
     
     envelope = st.checkbox('Envelope')
+  
+
 
 
    
@@ -228,6 +242,10 @@ x_rotate = math.cos(phase)*z.real - math.sin(phase)*z.imag
 # fig = go.Figure()
 # fig0 = plt.figure(figsize=(4,2.4), alpha=.45)
 fig0 = plt.figure(figsize=(4,2.3))
+
+# ==========================================
+# WAVELET 
+# ==========================================
 
 with col300:    #plot wavelet
 
@@ -262,6 +280,9 @@ with col300:    #plot wavelet
     plt.grid()
     st.pyplot(fig0) 
 
+# ==========================================
+# REFLECTIVITY 
+# ==========================================
 
 
 # length1 = 0.6
@@ -279,25 +300,58 @@ for i in range(nLayers + 1):
     layer_y = np.zeros(nTraces) # 2-way time boundary
     layers_arr.append(layer_y)
 
+rf = 0
 for j in range(nTraces):
     y1 = 0.* x1
  
     ns = int(dr/dt1)
     # st.write('dr =', dr, ' dt = ', dt1, ' ns = ', ns)
     # y1[ns] = -1.
+    print("############## next layer ###############")
+    rf_wedge = 0
     for i in range(nLayers+1):
-   
+        # if j==0:
+        #     rf0= rf
+        # if j==0 and i==4 and wedgeFlag:
+        #     continue
         try:
             lith_indx1 = st.session_state.lith_ind_arr[i+1]
             lith_indx2 = st.session_state.lith_ind_arr[i+2]
-            # print("lith_indrx1 = ", lith_indx1, "lith_indrx2 = ", lith_indx2)
-            rho1 = all_lith[lith_indx1]['rho'] 
-            rho2 = all_lith[lith_indx2]['rho'] 
-            # print("rho1 = ", rho1, "rho2 = ", rho2)
+            # fix first trace bug
 
-            v1 = all_lith[lith_indx1]['v'] 
-            v2 = all_lith[lith_indx2]['v'] 
-            rf=(rho2*v2 - rho1*v1)/(rho2*v2 + rho1*v1)
+            if j==0 and i==3 and wedgeFlag:
+                lith_indx1 = st.session_state.lith_ind_arr[i]
+                lith_indx2 = st.session_state.lith_ind_arr[i+2] 
+
+                # st.write("lith_indx1=", lith_indx1, "lith_indx2=", lith_indx2)
+                rho1 = all_lith[lith_indx1]['rho'] 
+                rho2 = all_lith[lith_indx2]['rho'] 
+                v1 = all_lith[lith_indx1]['v'] 
+                v2 = all_lith[lith_indx2]['v'] 
+                name1 = all_lith[lith_indx1]['name'] 
+                name2 = all_lith[lith_indx2]['name'] 
+                rf=(rho2*v2 - rho1*v1)/(rho2*v2 + rho1*v1)
+                rf_wedge = rf
+                # st.write("trace j = ", j, "\tlayer i = ", i, "\nname1:", name1, "\tv1 = ", v1, 
+                #   "\nname2:", name2, "\tv2 = ", v2, "\trf = ", rf)
+            # elif  j==0 and i==4 and wedgeFlag:
+            #   
+            #   rf = rf_wedge      
+            else:
+                lith_indx1 = st.session_state.lith_ind_arr[i+1]
+                lith_indx2 = st.session_state.lith_ind_arr[i+2]
+                # print("lith_indrx1 = ", lith_indx1, "lith_indrx2 = ", lith_indx2)
+                rho1 = all_lith[lith_indx1]['rho'] 
+                rho2 = all_lith[lith_indx2]['rho'] 
+                # print("rho1 = ", rho1, "rho2 = ", rho2)
+
+                v1 = all_lith[lith_indx1]['v'] 
+                v2 = all_lith[lith_indx2]['v'] 
+                name1 = all_lith[lith_indx1]['name'] 
+                name2 = all_lith[lith_indx2]['name'] 
+                rf=(rho2*v2 - rho1*v1)/(rho2*v2 + rho1*v1)
+            print("trace j = ", j, "\tlayer i = ", i, "\nname1:", name1, "\tv1 = ", v1, 
+                "\nname2:", name2, "\tv2 = ", v2, "\trf = ", rf)
 
             # rf = -1.
         except:
@@ -309,18 +363,20 @@ for j in range(nTraces):
 
         # y1[ni] = rf
 
-        if i<3:
+        if i<st.session_state.wNum:
             layers_arr[i][j] = ni*1.
             ni2 = ni
             # y1[ni] = rf
-        if i==3:
+        if i==st.session_state.wNum:
             ni = int(st.session_state.t_arr[i-1]/(dt1*1000.))    
             incr = (st.session_state.t_arr[i] - st.session_state.t_arr[i-1])/(dt1*1000.*((nTraces-1.)))
             layers_arr[i][j] = ni*1. + incr*j
             ni2 = int(ni + incr*j)
             # y1[int(ni + incr*j)] = rf
+            # if j==0:
+            #     rf = rf + rf0
 
-        if i>3:
+        if i>st.session_state.wNum:
             ni = int(st.session_state.t_arr[i-1]/(dt1*1000.))    
             incr = (st.session_state.t_arr[i] - st.session_state.t_arr[i-1])/(dt1*1000.*((nTraces-1.)))
             dt = st.session_state.t_arr[i] - st.session_state.t_arr[i-1]
@@ -340,6 +396,7 @@ for j in range(nTraces):
 
         if j==0:
             st.session_state.ri_arr[i] = rf
+            print('i =', i, 'rf =', rf)
         
 
 

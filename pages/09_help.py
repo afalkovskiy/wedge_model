@@ -3,15 +3,34 @@ from streamlit.components.v1 import html
 import pandas as pd
 
 # Define your data
-data = {
-    'Lithology': ['Shale', 'Sandstone', 'Limestone', 'Dolomite', 'Salt', 'Basement'],
-    'Density (g/cc)': [2.3, 2.6, 2.7, 2.75, 2.2, 2.8],
-    'P-wave velocity (km/s)': [3.6, 2.6, 2.7, 2.75, 4.5, 2.8]
-}
-df = pd.DataFrame(data)
+# data = {
+#     'Lithology': ['Shale', 'Sandstone', 'Limestone', 'Dolomite', 'Salt', 'Basement'],
+#     'Density (g/cc)': [2.3, 2.6, 2.7, 2.75, 2.2, 2.8],
+#     'P-wave velocity (km/s)': [3.6, 2.6, 2.7, 2.75, 4.5, 2.8]
+# }
+# df = pd.DataFrame(data)
+
+# lithology dictionaries for different rock types
+shale = {'name':'Shale', 'rho':2.3, 'v':3.6, 'color':'#bebebe', 'hatch':'--'}
+sandstone = {'name':'Sandstone', 'rho':2.6, 'v':5.0, 'color':'#ffff00', "hatch": "o"}
+# sandstone = {'name':'Sandstone', 'rho':2.6, 'v':5.0, 'color':'green', "hatch": ".."}
+limestone = {'name': 'Limestone', 'rho':2.7, 'v':6.0, 'color':'#3891f0', "hatch": "+"}
+dolomite = {'name': 'Dolomite', 'rho':2.75, 'v':6.7, 'color':'#8080ff', "hatch": "-/"}
+salt = {'name': 'Salt', 'rho':2.2, 'v':4.5, 'color':'#7ddfbe', "hatch": "++"}
+basement = {'name': 'Basement', 'rho':2.8, 'v':6.8, 'color':'#ef138a', "hatch": "-|"}
+
+all_lith = [shale, limestone, sandstone, dolomite, salt, basement]
+
+columns = ['Lithology', 'Density (g/cc)', 'Vp (km/s)']
+
+rows = []
+for lith in all_lith:
+    rows.append([lith['name'], lith['rho'], lith['v']])
+
+df2 = pd.DataFrame(rows, columns=columns)
 
 
-st.title('Wavelets with Wedge Model v.2')
+st.title('Wavelets with Wedge Model v.3')
 url = "https://www.rmseismic.com"
 
 st.write('This web app helps to visualise how a wedge model would look like on a seismic section.')
@@ -20,7 +39,9 @@ st.write('Select lithology from this list and layer thickness from the Model par
 
 # Display a static table
 st.subheader("Lithology parameters")
-st.table(df)
+# st.table(df)
+
+st.table(df2)
 
 st.write('You can select wavelet and vary model parameters and see on the fly how your seismic section would change.')
 st.write('Select layer number and after that select lihology and thickness for this layer.')
