@@ -23,7 +23,7 @@ pi = math.pi
 nTraces = 20
 nLayers = 6
 nLayersMax = 6
-length1 = 0.7
+length1 = 0.8
 dt1=0.001
 
 trace_arr = []
